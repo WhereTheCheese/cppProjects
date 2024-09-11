@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <stdlib.h>
 using namespace std;
+//NO GLOBAL VARIABLES
+//NO STRINGS
+//YOU SHOULD USE <iostream>
 
 int NumGuess()
 {
@@ -25,6 +28,11 @@ int main() {
   do {
     cin >> input;
     guesses++;
+    if (num < input) {
+      cout << "Your guess is to big" << endl;
+    } else if (num > input) {
+      cout << "Your guess is to low" << endl;
+    }
   } while (input != num);
   cout << "it took you " << guesses << " guesses!" << endl;
   cout << "would you like to play again? y/n" << endl;
