@@ -1,51 +1,56 @@
 #include <iostream>
-#include <string>
+#include <cctype>
 #include <cstring>
 using namespace std;
 
-
 int main() {
-  cout << "test 1" << endl;
-  char str[80];
-  cin.get(str, 80, '\n');
-  cout << str << endl;
-  char str2[80];
-  char str3[80];
-  int count = 0;
-  int num = 0;
-  for (int i = 0; i < 80; i++) {
-    if (str[i] == '\n' || str[i] == ' ' || str[i] == '.') {
-      
-	} else {
-      str2[num] = str[i];
-      //r3[num] = str[i];
-      num++;
-    }
-  }
-  int hi = 0;
-  cout << str2 << endl;
-  for (int o = 0; o < strlen(str2); o++) {
-    cout << o << endl;
-    if (str2[o] == str2[strlen(str2) - o]) {
-      cout << "cheese" << endl;
-      hi++;
-    }
-  }
-  
+    const int MAX_SIZE = 100;
+    char original[81];
+    char cleaned[81];
+    char reversed[81];
+    char runAgain;
 
-  //for (int y = 0; y < strlen(str2); y++) {
-  ///str3[y] = str2[strlen(str2) - y];
-  //cout << "hi" << endl;
-  //hi++;
-  // }
+    do {
+        int cleanedLength = 0;
 
+        cout << "Enter a string to check if it's a palindrome:" << endl;
+        cin.getline(original, 81);
 
-  //reverse(str3, str3 + strlen(num ));
-  cout << str3 << "hi" << endl;
-  
-      return 0;
+        // Clean the input and store in new array
+        for (int i = 0; original[i] != '\0'; i++) {
+            if (isalnum(original[i])) {
+                cleaned[cleanedLength] = tolower(original[i]);
+                cleanedLength++;
+            }
+        }
+        cleaned[cleanedLength] = '\0';  
 
-    
+        // Create reversed array
+        for (int i = 0; i < cleanedLength; i++) {
+            reversed[i] = cleaned[cleanedLength - 1 - i];
+        }
+        reversed[cleanedLength] = '\0';  
+
+        // Compare cleaned and reversed arrays
+        bool is_palindrome = (strcmp(cleaned, reversed) == 0);
+
+        // Output the result
+        if (is_palindrome) {
+            cout << "The input is a palindrome." << endl;
+        } else {
+            cout << "The input is not a palindrome." << endl;
+        }
 
 
+
+        // Ask if they want to run again
+        cout << "Do you want to check another string? (y/n): ";
+        cin >> runAgain;
+        cin.ignore(); 
+
+    } while (tolower(runAgain) == 'y');
+
+    cout << "Thank you for using the palindrome checker!" << endl;
+
+    return 0;
 }
