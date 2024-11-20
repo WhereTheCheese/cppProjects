@@ -2,11 +2,14 @@
 #include <iostream>
 using namespace std;
 
-Music::Music(string title, int year, string publisher, 
-             string artist, int duration)
-    : Media(title, year, publisher), artist(artist), duration(duration) {}
+Music::Music(const char* title, int year, const char* publisher, 
+             const char* artist, int duration)
+    : Media(title, year, publisher), duration(duration) {
+    strncpy(this->artist, artist, MAX_STRING - 1);
+    this->artist[MAX_STRING - 1] = '\0';
+}
 
-string Music::getArtist() const { return artist; }
+const char* Music::getArtist() const { return artist; }
 int Music::getDuration() const { return duration; }
 
 void Music::displayInfo() const {
