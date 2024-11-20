@@ -1,23 +1,25 @@
 #ifndef MEDIA_H
 #define MEDIA_H
-#include <string>
+#include <cstring>
 using namespace std;
+
+const int MAX_STRING = 100;  
 
 class Media {
 protected:
-    string title;
+    char title[MAX_STRING];
     int year;
-    string publisher;
+    char publisher[MAX_STRING];
 
 public:
-    // Constructor
-    Media(string title = "", int year = 0, string publisher = "");
+    //constructor
+   Media(const char* title = "", int year = 0, const char* publisher = "");
     
-    // Virtual destructor
+    //Virtual destructor
     virtual ~Media() = default;
     
     // Virtual methods for common fields
-    virtual string getTitle() const;
+    virtual const char* getTitle() const;
     virtual int getYear() const;
     virtual string getPublisher() const;
     
