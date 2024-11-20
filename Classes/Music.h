@@ -4,19 +4,19 @@
 
 class Music : public Media {
 private:
-    string artist;
+    char artist[MAX_STRING];
     int duration; // in seconds
 
 public:
-    // Constructor
-    Music(string title = "", int year = 0, string publisher = "",
-          string artist = "", int duration = 0);
+    //Cconstructor
+    Music(const char* title = "", int year = 0, const char* publisher = "",
+          const char* artist = "", int duration = 0);
     
-    // Getters
-    string getArtist() const;
+    //getters
+    const char* getArtist() const;
     int getDuration() const;
     
-    // Override display method
+    //Override display method
     void displayInfo() const override;
 };
 #endif
