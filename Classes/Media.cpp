@@ -1,25 +1,15 @@
 #include "Media.h"
+#include <cstring>
 
-Media::Media(string title, int year, string publisher)
-    : title(title), year(year), publisher(publisher) {}
-
-string Media::getTitle() const { return title; }
-int Media::getYear() const { return year; }
-string Media::getPublisher() const { return publisher; }
-
-// VideoGame.cpp - Video game class implementation
-#include "VideoGame.h"
-#include <iostream>
-using namespace std;
-
-VideoGame::VideoGame(string title, int year, string publisher, string rating)
-    : Media(title, year, publisher), rating(rating) {}
-
-string VideoGame::getRating() const { return rating; }
-
-void VideoGame::displayInfo() const {
-    cout << "Video Game: " << title << "\n"
-         << "Year: " << year << "\n"
-         << "Publisher: " << publisher << "\n"
-         << "Rating: " << rating << "\n";
+Media::Media(const char* title, int year, const char* publisher) {
+    strncpy(this->title, title, MAX_STRING - 1);
+    this->title[MAX_STRING - 1] = '\0';
+    this->year = year;
+    strncpy(this->publisher, publisher, MAX_STRING - 1);
+    this->publisher[MAX_STRING - 1] = '\0';
 }
+
+const char* Media::getTitle() const { return title; }
+int Media::getYear() const { return year; }
+const char* Media::getPublisher() const { return publisher; }
+
