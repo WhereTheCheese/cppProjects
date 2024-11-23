@@ -153,7 +153,12 @@ public:
     }
 
     void printHelp() {
-   //add stuff for when you ask for help
+    cout << "\nAvailable commands:" << endl;
+        cout << "- NORTH, SOUTH, EAST, WEST : move in that direction" << endl;
+        cout << "- USE [ITEM] : use an item in the current room" << endl;
+        cout << "- HELP : show this help message" << endl;
+        cout << "- QUIT : exit the game" << endl;
+    }
     }
 };
 
