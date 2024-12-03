@@ -4,17 +4,12 @@
 
 class VideoGame : public Media {
 private:
-    string rating;
+    char rating[MAX_STRING];
 
 public:
-    // Constructor
-    VideoGame(string title = "", int year = 0, string publisher = "", 
-             string rating = "");
-    
-    // Getter for rating
-    string getRating() const;
-    
-    // Override display method
+    VideoGame(const char* title = "", int year = 0, const char* publisher = "", 
+             const char* rating = "");
+    const char* getRating() const;
     void displayInfo() const override;
 };
 #endif
