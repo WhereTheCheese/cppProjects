@@ -2,7 +2,7 @@
 #define MUSIC_H
 #include "Media.h" 
 
-class Music : public Media {  // Added public inheritance
+class Music : public Media {  
 private:
     char artist[MAX_STRING];
     int duration;
