@@ -3,7 +3,7 @@
 #include <cstring>
 using namespace std;
 
-const int MAX_STRING = 100;  // Define this in Media.h so all files can access it
+const int MAX_STRING = 100; 
 
 class Media {
 protected:
