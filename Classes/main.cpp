@@ -67,14 +67,12 @@ void displayMenu() {
 //Adds a new media item to the database
  
 void addMedia(vector<unique_ptr<Media>>& database) {
-    // Display media type options
     cout << "What type of media would you like to add?\n"
          << "1. Video Game\n"
          << "2. Music\n"
          << "3. Movie\n"
          << "Enter choice (1-3): ";
-    
-    //Variables 
+    //varubles
     char choice[MAX_STRING];
     char title[MAX_STRING];
     char publisher[MAX_STRING];
@@ -83,27 +81,22 @@ void addMedia(vector<unique_ptr<Media>>& database) {
     char rating[MAX_STRING];
     int year, duration;
 
-    //media type choice
     safeGetLine(choice, MAX_STRING);
 
-    //common fields for all media types
     cout << "Enter title: ";
     safeGetLine(title, MAX_STRING);
     cout << "Enter year: ";
     cin >> year;
-    cin.ignore();  // Clear newline from input buffer
+    cin.ignore();
     cout << "Enter publisher: ";
     safeGetLine(publisher, MAX_STRING);
 
-    //Handle specific media type input and creation
     if (strcmp(choice, "1") == 0) {
-        //Video Game
         cout << "Enter rating: ";
         safeGetLine(rating, MAX_STRING);
         database.push_back(make_unique<VideoGame>(title, year, publisher, rating));
     }
     else if (strcmp(choice, "2") == 0) {
-        //Music
         cout << "Enter artist: ";
         safeGetLine(artist, MAX_STRING);
         cout << "Enter duration (in seconds): ";
@@ -112,7 +105,6 @@ void addMedia(vector<unique_ptr<Media>>& database) {
         database.push_back(make_unique<Music>(title, year, publisher, artist, duration));
     }
     else if (strcmp(choice, "3") == 0) {
-        //Movie
         cout << "Enter director: ";
         safeGetLine(director, MAX_STRING);
         cout << "Enter duration (in minutes): ";
