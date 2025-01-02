@@ -2,7 +2,7 @@
 #define VIDEOGAME_H
 #include "Media.h"
 
-class VideoGame : public Media {
+class VideoGame : public Media {  
 private:
     char rating[MAX_STRING];
 
