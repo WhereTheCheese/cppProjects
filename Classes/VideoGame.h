@@ -1,18 +1,15 @@
-#include "VideoGame.h"
-#include <iostream>
-using namespace std;
+#ifndef VIDEOGAME_H
+#define VIDEOGAME_H
+#include "Media.h"
 
-VideoGame::VideoGame(const char* title, int year, const char* publisher, const char* rating)
-    : Media(title, year, publisher) {
-    strncpy(this->rating, rating, MAX_STRING - 1);
-    this->rating[MAX_STRING - 1] = '\0';
-}
+class VideoGame : public Media {
+private:
+    char rating[MAX_STRING];
 
-const char* VideoGame::getRating() const { return rating; }
-
-void VideoGame::displayInfo() const {
-    cout << "Video Game: " << title << "\n"
-         << "Year: " << year << "\n"
-         << "Publisher: " << publisher << "\n"
-         << "Rating: " << rating << "\n";
-}
+public:
+    VideoGame(const char* title = "", int year = 0, const char* publisher = "", 
+             const char* rating = "");
+    const char* getRating() const;
+    void displayInfo() const override;
+};
+#endif
