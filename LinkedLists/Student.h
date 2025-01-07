@@ -1,17 +1,16 @@
 #ifndef STUDENT_H
 #define STUDENT_H
 
-using namespace std;
-
 class Student {
 private:
-//student id
-    int id; 
+    int studentId;
 
 public:
-//constructor for Student
-    Student(int id) : id(id) {} 
-    
+    //Constructor
+    Student(int id);
+
+    //Getter for id (since it's private)
+    int getId() const;
 };
 
 #endif // STUDENT_H
