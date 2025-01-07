@@ -1,33 +1,29 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <iostream>
-
-using namespace std;
-
-class Student; 
+#include "Student.h"
 
 class Node {
 private:
-//makes the pointers
-    Student* student; 
-    Node* next;        
+    Student* student;  //Pointer to student data
+    Node* next;       //Pointer to next node
 
 public:
-    //makes a new node with student
+    //Creates node with student data
     Node(Student* s);
 
-    //cleans up node
+    //Cleans up the node and student data
     ~Node();
 
-    //selecticts next node in chain
+    //Returns pointer to next node in list
     Node* getNext();
 
-    //selctios the student from current node
+    //Returns pointer to student data
     Student* getStudent();
 
-    //Points this node to next node
+    //Sets the next node pointer
     void setNext(Node* newNext);
 };
 
 #endif // NODE_H
+
