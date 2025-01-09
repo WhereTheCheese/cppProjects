@@ -10,14 +10,14 @@ cout << "2 " << board[0][2]<< " "  << board[1][2] << " " <<board[2][2] << endl;
 }
 
 bool checkWin(const char board[3][3], char player) {
-    // Check rows and columns
+    //check rows and columns
     for (int i = 0; i < 3; i++) {
         if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
             (board[0][i] == player && board[1][i] == player && board[2][i] == player)) {
             return true;
         }
     }
-    // Check diagonals
+    //Check diagnals
     return (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
            (board[0][2] == player && board[1][1] == player && board[2][0] == player);
 }
@@ -43,6 +43,7 @@ void clearInputBuffer() {
 }
 
 int main() {
+    //board array
     char board[3][3] = {
         {' ', ' ', ' '},
         {' ', ' ', ' '},
@@ -52,18 +53,18 @@ int main() {
     bool gameOver = false;
 
     cout << "Welcome to Tic-tac-toe!" << endl;
-    cout << "Players take turns entering row and column numbers (1-3)." << endl;
-
+    cout << "take turns entering row and column numbers (1-3)." << endl;
+//Loop to keep the game going
     while (!gameOver) {
         displayBoard(board);
         
         int row, col;
         bool validInput = false;
-        
+        //checks validy of the move
         while (!validInput) {
             cout << "Player " << currentPlayer << ", enter your move (row col): ";
             if (cin >> row >> col) {
-                row--; col--; // Convert to 0-based indexing
+                row--; col--; 
                 if (isValidMove(row, col, board)) {
                     validInput = true;
                 } else {
@@ -76,7 +77,7 @@ int main() {
         }
 
         board[row][col] = currentPlayer;
-
+//check the win condishions
         if (checkWin(board, currentPlayer)) {
             displayBoard(board);
             cout << "Player " << currentPlayer << " wins!" << endl;
