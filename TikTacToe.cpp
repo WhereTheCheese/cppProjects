@@ -2,11 +2,24 @@
 using namespace std;
 
 void displayBoard(const char board[3][3]) {
-//prints out the board
-cout << " 1  2  3" << endl;
-cout << "1 " << board[0][0] << " " << board[1][0] << " "  << board[2][0] << endl;
-cout << "1 " << board[0][1] << " " << board[1][1] << " "  << board[2][1] << endl;
-cout << "2 " << board[0][2]<< " "  << board[1][2] << " " <<board[2][2] << endl;
+    // prints out the board with the right labels this time
+    cout << "  1 2 3" << endl;  //Column labels
+    for (int i = 0; i < 3; i++) {
+        cout << i + 1 << " ";  //Row labels
+        for (int j = 0; j < 3; j++) {
+            cout << board[j][i] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void resetBoard(char board[3][3]) {
+    //sets all positions to empty
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            board[i][j] = ' ';
+        }
+    }
 }
 
 bool checkWin(const char board[3][3], char player) {
@@ -17,7 +30,7 @@ bool checkWin(const char board[3][3], char player) {
             return true;
         }
     }
-    //Check diagnals
+    //Check diagonals
     return (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
            (board[0][2] == player && board[1][1] == player && board[2][0] == player);
 }
@@ -43,53 +56,58 @@ void clearInputBuffer() {
 }
 
 int main() {
-    //board array
-    char board[3][3] = {
-        {' ', ' ', ' '},
-        {' ', ' ', ' '},
-        {' ', ' ', ' '}
-    };
-    char currentPlayer = 'X';
-    bool gameOver = false;
-
-    cout << "Welcome to Tic-tac-toe!" << endl;
-    cout << "take turns entering row and column numbers (1-3)." << endl;
-//Loop to keep the game going
-    while (!gameOver) {
-        displayBoard(board);
+    char board[3][3];
+    char playAgain = 'y';
+    //lets you play again
+    while (playAgain == 'y' || playAgain == 'Y') {
+        resetBoard(board);
+        char currentPlayer = 'X';
+        bool gameOver = false;
         
-        int row, col;
-        bool validInput = false;
-        //checks validy of the move
-        while (!validInput) {
-            cout << "Player " << currentPlayer << ", enter your move (row col): ";
-            if (cin >> row >> col) {
-                row--; col--; 
-                if (isValidMove(row, col, board)) {
-                    validInput = true;
+        cout << "\nWelcome to Tic-tac-toe!" << endl;
+        cout << "Take turns entering row and column numbers (1-3)." << endl;
+
+        while (!gameOver) {
+            displayBoard(board);
+            
+            int row, col;
+            bool validInput = false;
+            
+            while (!validInput) {
+                cout << "Player " << currentPlayer << ", enter your move (row col): ";
+                if (cin >> row >> col) {
+                    row--; col--; 
+                    if (isValidMove(row, col, board)) {
+                        validInput = true;
+                    } else {
+                        cout << "Invalid move! Position either out of bounds or already taken." << endl;
+                    }
                 } else {
-                    cout << "Invalid move! Position either out of bounds or already taken." << endl;
+                    cout << "Invalid input! Please enter numbers only." << endl;
+                    clearInputBuffer();
                 }
+            }
+            
+            board[col][row] = currentPlayer;
+
+            if (checkWin(board, currentPlayer)) {
+                displayBoard(board);
+                cout << "Player " << currentPlayer << " wins!" << endl;
+                gameOver = true;
+            } else if (checkTie(board)) {
+                displayBoard(board);
+                cout << "It's a tie!" << endl;
+                gameOver = true;
             } else {
-                cout << "Invalid input! Please enter numbers only." << endl;
-                clearInputBuffer();
+                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
             }
         }
-
-        board[row][col] = currentPlayer;
-//check the win condishions
-        if (checkWin(board, currentPlayer)) {
-            displayBoard(board);
-            cout << "Player " << currentPlayer << " wins!" << endl;
-            gameOver = true;
-        } else if (checkTie(board)) {
-            displayBoard(board);
-            cout << "It's a tie!" << endl;
-            gameOver = true;
-        } else {
-            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-        }
+        
+        cout << "\nWould you like to play again? (y/n): ";
+        cin >> playAgain;
+        clearInputBuffer();
     }
-
+    
+    cout << "Thanks for playing!" << endl;
     return 0;
 }
