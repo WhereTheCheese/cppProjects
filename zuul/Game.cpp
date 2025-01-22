@@ -71,6 +71,7 @@ public:
         
         engine_room->setExit("WEST", hallway_1);
         engine_room->setExit("EAST", hallway_2);
+        engine_room->setExit("NORTH", cafeteria);
         
         hallway_1->setExit("WEST", navigation);
         hallway_1->setExit("EAST", engine_room);
