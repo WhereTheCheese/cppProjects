@@ -1,19 +1,30 @@
-#ifndef MOVIE_H
-#define MOVIE_H
-#include "Media.h"
+#include "Music.h"
+#include <cstring>
 
-class Movie : public Media {  
-private:
-    char director[MAX_STRING];
-    int duration;
-    char rating[MAX_STRING];
+Music::Music() {
+    artist[0] = '\0';
+    duration = 0;
+}
 
-public:
-    Movie(const char* title = "", int year = 0, const char* publisher = "",
-          const char* director = "", int duration = 0, const char* rating = "");
-    const char* getDirector() const;
-    int getDuration() const;
-    const char* getRating() const;
-    void displayInfo() const override;
-};
-#endif
+Music::~Music() {}
+
+void Music::setArtist(const char* a) {
+    strncpy(artist, a, 99);
+    artist[99] = '\0';
+}
+
+void Music::setDuration(int d) {
+    duration = d;
+}
+
+const char* Music::getArtist() const {
+    return artist;
+}
+
+int Music::getDuration() const {
+    return duration;
+}
+
+const char* Music::getType() const {
+    return "Music";
+}
