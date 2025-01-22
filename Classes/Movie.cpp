@@ -1,25 +1,41 @@
-#include "Movie.h"
-#include <iostream>
-using namespace std;
 
-Movie::Movie(const char* title, int year, const char* publisher,
-             const char* director, int duration, const char* rating)
-    : Media(title, year, publisher), duration(duration) {
-    strncpy(this->director, director, MAX_STRING - 1);
-    this->director[MAX_STRING - 1] = '\0';
-    strncpy(this->rating, rating, MAX_STRING - 1);
-    this->rating[MAX_STRING - 1] = '\0';
+#include "Movie.h"
+#include <cstring>
+
+Movie::Movie() {
+    director[0] = '\0';
+    duration = 0;
+    rating[0] = '\0';
 }
 
-const char* Movie::getDirector() const { return director; }
-int Movie::getDuration() const { return duration; }
-const char* Movie::getRating() const { return rating; }
+Movie::~Movie() {}
 
-void Movie::displayInfo() const {
-    cout << "Movie: " << title << "\n"
-         << "Director: " << director << "\n"
-         << "Year: " << year << "\n"
-         << "Duration: " << duration << " minutes\n"
-         << "Rating: " << rating << "\n"
-         << "Publisher: " << publisher << "\n";
+void Movie::setDirector(const char* d) {
+    strncpy(director, d, 99);
+    director[99] = '\0';
+}
+
+void Movie::setDuration(int d) {
+    duration = d;
+}
+
+void Movie::setRating(const char* r) {
+    strncpy(rating, r, 9);
+    rating[9] = '\0';
+}
+
+const char* Movie::getDirector() const {
+    return director;
+}
+
+int Movie::getDuration() const {
+    return duration;
+}
+
+const char* Movie::getRating() const {
+    return rating;
+}
+
+const char* Movie::getType() const {
+    return "Movie";
 }
