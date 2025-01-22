@@ -1,22 +1,30 @@
 #include "Music.h"
-#include <iostream>
-using namespace std;
+#include <cstring>
 
-Music::Music(const char* title, int year, const char* publisher, 
-             const char* artist, int duration)
-    : Media(title, year, publisher), duration(duration) {
-    strncpy(this->artist, artist, MAX_STRING - 1);
-    this->artist[MAX_STRING - 1] = '\0';
+Music::Music() {
+    artist[0] = '\0';
+    duration = 0;
 }
 
-const char* Music::getArtist() const { return artist; }
-int Music::getDuration() const { return duration; }
+Music::~Music() {}
 
-void Music::displayInfo() const {
-    cout << "Music: " << title << "\n"
-         << "Artist: " << artist << "\n"
-         << "Year: " << year << "\n"
-         << "Duration: " << duration / 60 << ":" 
-         << duration % 60 << "\n"
-         << "Publisher: " << publisher << "\n";
+void Music::setArtist(const char* a) {
+    strncpy(artist, a, 99);
+    artist[99] = '\0';
+}
+
+void Music::setDuration(int d) {
+    duration = d;
+}
+
+const char* Music::getArtist() const {
+    return artist;
+}
+
+int Music::getDuration() const {
+    return duration;
+}
+
+const char* Music::getType() const {
+    return "Music";
 }
