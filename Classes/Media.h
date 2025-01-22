@@ -1,23 +1,23 @@
 #ifndef MEDIA_H
 #define MEDIA_H
-#include <cstring>
-using namespace std;
-
-const int MAX_STRING = 100; 
 
 class Media {
 protected:
-    char title[MAX_STRING];
+    char title[100];
     int year;
-    char publisher[MAX_STRING];
+    char publisher[100];
 
 public:
-    Media(const char* title = "", int year = 0, const char* publisher = "");
-    virtual ~Media() = default;
+    Media();
+    virtual ~Media();
+    
+    virtual void setTitle(const char* t);
+    virtual void setYear(int y);
+    virtual void setPublisher(const char* p);
     
     virtual const char* getTitle() const;
     virtual int getYear() const;
     virtual const char* getPublisher() const;
-    virtual void displayInfo() const = 0;
+    
+    virtual const char* getType() const = 0;
 };
-#endif
