@@ -1,15 +1,17 @@
 #ifndef VIDEOGAME_H
 #define VIDEOGAME_H
+
 #include "Media.h"
 
-class VideoGame : public Media {  
+class VideoGame : public Media {
 private:
-    char rating[MAX_STRING];
+    char rating[10];
 
 public:
-    VideoGame(const char* title = "", int year = 0, const char* publisher = "", 
-             const char* rating = "");
+    VideoGame();
+    virtual ~VideoGame();
+    
+    void setRating(const char* r);
     const char* getRating() const;
-    void displayInfo() const override;
+    virtual const char* getType() const override;
 };
-#endif
