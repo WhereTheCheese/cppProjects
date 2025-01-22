@@ -1,17 +1,20 @@
 #ifndef MUSIC_H
 #define MUSIC_H
-#include "Media.h" 
 
-class Music : public Media {  
+#include "Media.h"
+
+class Music : public Media {
 private:
-    char artist[MAX_STRING];
-    int duration;
+    char artist[100];
+    int duration; // in seconds
 
 public:
-    Music(const char* title = "", int year = 0, const char* publisher = "",
-          const char* artist = "", int duration = 0);
+    Music();
+    virtual ~Music();
+    
+    void setArtist(const char* a);
+    void setDuration(int d);
     const char* getArtist() const;
     int getDuration() const;
-    void displayInfo() const override;
+    virtual const char* getType() const override;
 };
-#endif
