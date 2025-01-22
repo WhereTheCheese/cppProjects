@@ -1,30 +1,23 @@
-#include "Music.h"
-#include <cstring>
+#ifndef MOVIE_H
+#define MOVIE_H
 
-Music::Music() {
-    artist[0] = '\0';
-    duration = 0;
-}
+#include "Media.h"
 
-Music::~Music() {}
+class Movie : public Media {
+private:
+    char director[100];
+    int duration;
+    char rating[10];
 
-void Music::setArtist(const char* a) {
-    strncpy(artist, a, 99);
-    artist[99] = '\0';
-}
-
-void Music::setDuration(int d) {
-    duration = d;
-}
-
-const char* Music::getArtist() const {
-    return artist;
-}
-
-int Music::getDuration() const {
-    return duration;
-}
-
-const char* Music::getType() const {
-    return "Music";
-}
+public:
+    Movie();
+    virtual ~Movie();
+    
+    void setDirector(const char* d);
+    void setDuration(int d);
+    void setRating(const char* r);
+    const char* getDirector() const;
+    int getDuration() const;
+    const char* getRating() const;
+    virtual const char* getType() const override;
+};
