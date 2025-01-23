@@ -10,7 +10,7 @@ void printStudents(Node* head);
 Node* deleteStudent(Node* head, int id);
 double calculateAverageGPA(Node* head, int count, double total);
 
-//a helper function for adding studernts
+//add a student to the list
 void addStudent(Node*& head, Student* student) {
     if (!head || student->getID() < head->getStudent()->getID()) {
         Node* newNode = new Node(student);
@@ -23,29 +23,39 @@ void addStudent(Node*& head, Student* student) {
     addStudent(nextNode, student);
     head->setNext(nextNode);
 }
-//prints out students
+
+//print all of the students names
 void printStudents(Node* head) {
     if (!head) return;
-    cout << head->getStudent()->getFirstName() << " " << head->getStudent()->getLastName()
-         << ", " << head->getStudent()->getID()
-         << ", " << fixed << setprecision(2) << head->getStudent()->getGPA() << endl;
+
+    Student* student = head->getStudent();
+    cout << student->getFirstName() << " " << student->getLastName()
+         << ", " << student->getID()
+         << ", " << fixed << setprecision(2) << student->getGPA() << endl;
+
     printStudents(head->getNext());
 }
-//deletes students
+
+//delete students by their ID
 Node* deleteStudent(Node* head, int id) {
     if (!head) return nullptr;
+
     if (head->getStudent()->getID() == id) {
         Node* temp = head->getNext();
         delete head;
         return temp;
     }
+
     head->setNext(deleteStudent(head->getNext(), id));
     return head;
 }
-//calculated the avrage gpa
+
+//avrage the gpa of the students
 double calculateAverageGPA(Node* head, int count, double total) {
     if (!head) return count == 0 ? 0.0 : total / count;
-    return calculateAverageGPA(head->getNext(), count + 1, total + head->getStudent()->getGPA());
+
+    double gpa = head->getStudent()->getGPA();
+    return calculateAverageGPA(head->getNext(), count + 1, total + gpa);
 }
 
 int main() {
@@ -55,6 +65,7 @@ int main() {
     while (true) {
         cout << "Enter command (ADD, PRINT, DELETE, AVERAGE, QUIT): ";
         cin >> command;
+
         if (command == "ADD") {
             string firstName, lastName;
             int id;
@@ -87,11 +98,11 @@ int main() {
         }
     }
 
-    //delete unneeded stuff
+    //deal with memory stuff
     while (head) {
-        Node* temp = head;
-        head = head->getNext();
-        delete temp;
+        Node* temp = head->getNext();
+        delete head;
+        head = temp;
     }
 
     return 0;
