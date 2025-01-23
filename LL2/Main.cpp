@@ -10,7 +10,7 @@ void printStudents(Node* head);
 Node* deleteStudent(Node* head, int id);
 double calculateAverageGPA(Node* head, int count, double total);
 
-//add a student to the list
+//add students to the list
 void addStudent(Node*& head, Student* student) {
     if (!head || student->getID() < head->getStudent()->getID()) {
         Node* newNode = new Node(student);
@@ -24,7 +24,7 @@ void addStudent(Node*& head, Student* student) {
     head->setNext(nextNode);
 }
 
-//print all of the students names
+//print out all of the students names
 void printStudents(Node* head) {
     if (!head) return;
 
@@ -36,7 +36,7 @@ void printStudents(Node* head) {
     printStudents(head->getNext());
 }
 
-//delete students by their ID
+//delete with the students ID's
 Node* deleteStudent(Node* head, int id) {
     if (!head) return nullptr;
 
@@ -50,7 +50,7 @@ Node* deleteStudent(Node* head, int id) {
     return head;
 }
 
-//avrage the gpa of the students
+//calcs the avrage GPA of the students
 double calculateAverageGPA(Node* head, int count, double total) {
     if (!head) return count == 0 ? 0.0 : total / count;
 
@@ -98,7 +98,7 @@ int main() {
         }
     }
 
-    //deal with memory stuff
+    //clean up unneeded stuff
     while (head) {
         Node* temp = head->getNext();
         delete head;
@@ -107,3 +107,7 @@ int main() {
 
     return 0;
 }
+
+
+
+
