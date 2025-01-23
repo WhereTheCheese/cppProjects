@@ -21,3 +21,4 @@ public:
     
     virtual const char* getType() const = 0;
 };
+#endif 
