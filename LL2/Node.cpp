@@ -1,41 +1,41 @@
 #include "Node.h"
-
-/*
-  This is the cpp file of Node.h. It deals with getting and setting the nodes correctly.
-  Author: Diya Shah
-  Date: 11/15/2024
-
-*/
+#include "Student.h" 
 
 
-Node::Node(Student *newStudent){
-  value=newStudent;
-  next=NULL;
-}
-//destructor - deletes the char variables
-Node::~Node(){
-  delete &value;
-  next=NULL;
+Node::Node(Student* newStudent) {
+    value = newStudent;
+    next = nullptr;
 }
 
-//sets a student
-void Node::setStudent(Student *newStudent){
-  //sets value to the newstudent
-  value=newStudent;
+Node::~Node() {
+    delete value; 
 }
 
-char* Node::getStudent(){
-  //returns the first name of the value
-  //can be changed based on value
-  return value->getFirstName();
+Student* Node::getStudent() {
+    return value; 
 }
 
-void Node::setNext(Node* newnext){
-  //sets the next node
-  next=newnext;
+void Node::setStudent(Student* newStudent) {
+    value = newStudent;
 }
 
-Node*Node::getNext(){
-  //return the next node
-  return next;
+Node* Node::getNext() {
+    return next;
 }
+
+void Node::setNext(Node* newNext) {
+    next = newNext;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
