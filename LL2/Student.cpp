@@ -1,7 +1,7 @@
 #include "Student.h"
 using namespace std;
 
-Student::Student(const std::string& firstName, const std::string& lastName, int id, double gpa)
+Student::Student(const string& firstName, const string& lastName, int id, double gpa)
      firstName(firstName), lastName(lastName), id(id), gpa(gpa) {}
 
 string Student::getFirstName() const {
