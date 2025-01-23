@@ -1,31 +1,25 @@
+// Student.h
 #ifndef STUDENT_H
 #define STUDENT_H
-#include <iostream>
-#include <cstring>
+using namespace std;
+
+#include <string>
 
 class Student {
-public:
-    //constructor and destructor
-    Student();
-    ~Student();
-    
-    //getters
-    char* getFirstName();
-    char* getLastName();
-    int getID();
-    float getGPA();
-    
-    //setters
-    void setFirstName(const char* name);
-    void setLastName(const char* name);
-    void setID(int newID);
-    void setGPA(float newGPA);
-
 private:
-    char* firstName;
-    char* lastName;
+    string firstName;
+    string lastName;
     int id;
-    float gpa;
+    double gpa;
+
+public:
+    Student(const string& firstName, const string& lastName, int id, double gpa);
+
+    string getFirstName() const;
+    string getLastName() const;
+    int getID() const;
+    double getGPA() const;
 };
 
-#endif
+#endif // STUDENT_H
+
