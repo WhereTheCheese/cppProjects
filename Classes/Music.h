@@ -18,3 +18,4 @@ public:
     int getDuration() const;
     virtual const char* getType() const override;
 };
+#endif
