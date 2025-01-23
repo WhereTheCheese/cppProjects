@@ -1,13 +1,14 @@
 #include "Student.h"
+using namespace std;
 
-Student::Student(const std::string& firstName, const std::string& lastName, int id, double gpa)
+Student::Student(const string& firstName, const string& lastName, int id, double gpa)
     : firstName(firstName), lastName(lastName), id(id), gpa(gpa) {}
 
-std::string Student::getFirstName() const {
+string Student::getFirstName() const {
     return firstName;
 }
 
-std::string Student::getLastName() const {
+string Student::getLastName() const {
     return lastName;
 }
 
