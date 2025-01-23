@@ -15,3 +15,4 @@ public:
     const char* getRating() const;
     virtual const char* getType() const override;
 };
+#endif
