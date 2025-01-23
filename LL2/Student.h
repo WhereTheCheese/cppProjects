@@ -2,7 +2,7 @@
 #define STUDENT_H
 
 #include <string> 
-using namespacestd;
+using namespace std;
 
 class Student {
 private:
