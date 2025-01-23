@@ -1,9 +1,8 @@
-// Student.h
 #ifndef STUDENT_H
 #define STUDENT_H
-using namespace std;
 
-#include <string>
+#include <string> 
+using namespacestd;
 
 class Student {
 private:
@@ -15,11 +14,17 @@ private:
 public:
     Student(const string& firstName, const string& lastName, int id, double gpa);
 
+    
     string getFirstName() const;
     string getLastName() const;
     int getID() const;
     double getGPA() const;
+
+    //helps create a new student from the student name
+    static Student* createFromFirstName(const char* firstName);
 };
 
-#endif // STUDENT_H
+#endif
+
+
 
