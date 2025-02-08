@@ -1,75 +1,51 @@
 #include <iostream>
 #include <iomanip>
-#include "Node.h"
+#include <fstream>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include "HashTable.h"
 #include "Student.h"
 
 using namespace std;
-
-void addStudent(Node*& head, Student* student);
-void printStudents(Node* head);
-Node* deleteStudent(Node* head, int id);
-double calculateAverageGPA(Node* head, int count, double total);
-
-//add students to the list
-void addStudent(Node*& head, Student* student) {
-    if (!head || student->getID() < head->getStudent()->getID()) {
-        Node* newNode = new Node(student);
-        newNode->setNext(head);
-        head = newNode;
-        return;
+//read in info from CSV files
+vector<string> readCSV(const string& filename) {
+    vector<string> lines;
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening file: " << filename << endl;
+        return lines;
     }
-
-    Node* nextNode = head->getNext();
-    addStudent(nextNode, student);
-    head->setNext(nextNode);
-}
-
-//print out all of the students names
-void printStudents(Node* head) {
-    if (!head) return;
-
-    Student* student = head->getStudent();
-    cout << student->getFirstName() << " " << student->getLastName()
-         << ", " << student->getID()
-         << ", " << fixed << setprecision(2) << student->getGPA() << endl;
-
-    printStudents(head->getNext());
-}
-
-//delete with the students ID's
-Node* deleteStudent(Node* head, int id) {
-    if (!head) return nullptr;
-
-    if (head->getStudent()->getID() == id) {
-        Node* temp = head->getNext();
-        delete head;
-        return temp;
+    string line;
+    while (getline(file, line)) {
+        if (!line.empty()) {
+            lines.push_back(line);
+        }
     }
-
-    head->setNext(deleteStudent(head->getNext(), id));
-    return head;
-}
-
-//calcs the avrage GPA of the students
-double calculateAverageGPA(Node* head, int count, double total) {
-    if (!head) return count == 0 ? 0.0 : total / count;
-
-    double gpa = head->getStudent()->getGPA();
-    return calculateAverageGPA(head->getNext(), count + 1, total + gpa);
+    file.close();
+    return lines;
 }
 
 int main() {
-    Node* head = nullptr;
+    HashTable hashTable;
     string command;
+    static int nextGeneratedID = 1;
+
+    vector<string> firstNames = readCSV("first-names.csv");
+    vector<string> lastNames = readCSV("last-names.csv");
+
+    srand(time(nullptr));
 
     while (true) {
-        cout << "Enter command (ADD, PRINT, DELETE, AVERAGE, QUIT): ";
+        cout << "Enter command (ADD, GENERATE, PRINT, DELETE, AVERAGE, QUIT): ";
         cin >> command;
 
         if (command == "ADD") {
             string firstName, lastName;
             int id;
             double gpa;
+
             cout << "Enter first name: ";
             cin >> firstName;
             cout << "Enter last name: ";
@@ -80,16 +56,36 @@ int main() {
             cin >> gpa;
 
             Student* newStudent = new Student(firstName, lastName, id, gpa);
-            addStudent(head, newStudent);
+            hashTable.addStudent(newStudent);
+        } else if (command == "GENERATE") {
+            int count;
+            cout << "Enter number of students to generate: ";
+            cin >> count;
+
+            if (firstNames.empty() || lastNames.empty()) {
+                cout << "Error: Missing name data. Ensure CSV files are present." << endl;
+                continue;
+            }
+    //adds the naems and stuff with the csv file
+            for (int i = 0; i < count; ++i) {
+                string firstName = firstNames[rand() % firstNames.size()];
+                string lastName = lastNames[rand() % lastNames.size()];
+                int id = nextGeneratedID++;
+                double gpa = static_cast<double>(rand() % 401) / 100;
+
+                Student* newStudent = new Student(firstName, lastName, id, gpa);
+                hashTable.addStudent(newStudent);
+            }
         } else if (command == "PRINT") {
-            printStudents(head);
+            hashTable.printStudents();
         } else if (command == "DELETE") {
             int id;
             cout << "Enter student ID to delete: ";
             cin >> id;
-            head = deleteStudent(head, id);
+            bool success = hashTable.deleteStudent(id);
+            cout << (success ? "Deleted." : "Not found.") << endl;
         } else if (command == "AVERAGE") {
-            double average = calculateAverageGPA(head, 0, 0.0);
+            double average = hashTable.calculateAverageGPA();
             cout << "Average GPA: " << fixed << setprecision(2) << average << endl;
         } else if (command == "QUIT") {
             break;
@@ -98,16 +94,5 @@ int main() {
         }
     }
 
-    //clean up unneeded stuff
-    while (head) {
-        Node* temp = head->getNext();
-        delete head;
-        head = temp;
-    }
-
     return 0;
 }
-
-
-
-
