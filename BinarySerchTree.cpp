@@ -14,7 +14,7 @@ public:
         left = nullptr;
         right = nullptr;
     }
-};
+}; 
 
 //BTW BST stand for Binary Serch Tree
 class BST {
