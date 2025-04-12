@@ -3,191 +3,204 @@
 #include <queue>
 using namespace std;
 
-class TreeNode {
+enum Color { RED, BLACK };
+
+// you see its RB insted of BST becase it is red black tree
+class RBNode {
 public:
     int data;
-    TreeNode* left;
-    TreeNode* right;
+    Color color;
+    RBNode* left, *right, *parent;
 
-    TreeNode(int val) {
-        data = val;
-        left = nullptr;
-        right = nullptr;
-    }
-}; 
+    RBNode(int val) : data(val), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
+};
 
-//BTW BST stand for Binary Serch Tree
-class BST {
+class RBTree {
 private:
-    TreeNode* root;
+    RBNode* root;
+    RBNode* NIL; 
 
-    //helper function to insert a number into the tree
-    TreeNode* insertHelper(TreeNode* node, int val) {
-        if (node == nullptr) {
-            return new TreeNode(val);
-        }
-        if (val < node->data) {
-            node->left = insertHelper(node->left, val);
-        } else {
-            node->right = insertHelper(node->right, val);
-        }
-        return node;
+    //x around righth child
+    void leftRotate(RBNode* x) {
+        RBNode* y = x->right;
+        x->right = y->left;
+        if (y->left != NIL) y->left->parent = x;
+        y->parent = x->parent;
+        if (x->parent == nullptr) root = y;
+        else if (x == x->parent->left) x->parent->left = y;
+        else x->parent->right = y;
+        y->left = x;
+        x->parent = y;
     }
 
-    //helper function to find the smallest number in a subtree
-    TreeNode* findMin(TreeNode* node) {
-        while (node->left != nullptr) {
-            node = node->left;
-        }
-        return node;
+    //y around other child
+    void rightRotate(RBNode* y) {
+        RBNode* x = y->left;
+        y->left = x->right;
+        if (x->right != NIL) x->right->parent = y;
+        x->parent = y->parent;
+        if (y->parent == nullptr) root = x;
+        else if (y == y->parent->right) y->parent->right = x;
+        else y->parent->left = x;
+        x->right = y;
+        y->parent = x;
     }
 
-    //Helper function to remove a number from the tree
-    TreeNode* removeHelper(TreeNode* node, int val) {
-        if (node == nullptr) return nullptr;
-
-        if (val < node->data) {
-            node->left = removeHelper(node->left, val);
-        } else if (val > node->data) {
-            node->right = removeHelper(node->right, val);
-        } else {
-            if (node->left == nullptr) {
-                TreeNode* temp = node->right;
-                delete node;
-                return temp;
-            } else if (node->right == nullptr) {
-                TreeNode* temp = node->left;
-                delete node;
-                return temp;
+    //fix if its red or black aftet he insertion happens
+    void fixInsert(RBNode* z) {
+        while (z->parent != nullptr && z->parent->color == RED) {
+            if (z->parent == z->parent->parent->left) {
+                RBNode* y = z->parent->parent->right; // Uncle (or aunt)
+                if (y->color == RED) {
+                    //Case 1 uncle (or aunt, idc) is red
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                } else {
+                    if (z == z->parent->right) {
+                        //Case 2 triangle
+                        z = z->parent;
+                        leftRotate(z);
+                    }
+                    //Case 3 line
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    rightRotate(z->parent->parent);
+                }
+            } else {
+                RBNode* y = z->parent->parent->left; //Uncle (or, again, aunt) on other side
+                if (y->color == RED) {
+                    //Case 1 uncle (or, again, aunt) is red
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                } else {
+                    if (z == z->parent->left) {
+                        //Case 2 triangle
+                        z = z->parent;
+                        rightRotate(z);
+                    }
+                    //Case 3 line
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    leftRotate(z->parent->parent);
+                }
             }
-
-            //Moves around the nodes in the subtrees
-            TreeNode* temp = findMin(node->right);
-            node->data = temp->data;
-            node->right = removeHelper(node->right, temp->data);
         }
-        return node;
+        root->color = BLACK;
     }
 
-    //Serches for values in the tree
-    bool searchHelper(TreeNode* node, int val) {
-        if (node == nullptr) return false;
-        if (node->data == val) return true;
-        if (val < node->data) return searchHelper(node->left, val);
-        return searchHelper(node->right, val);
-    }
-
-    //printing the tree
-    void printTreeHelper(TreeNode* node, int space) {
-        if (node == nullptr) return;
+    //recursive helper to print the tree
+    void printHelper(RBNode* root, int space) const {
+        if (root == NIL) return;
 
         space += 10;
-        printTreeHelper(node->right, space);
+        printHelper(root->right, space);
 
         cout << endl;
         for (int i = 10; i < space; i++) cout << " ";
-        cout << node->data << "\n";
+        cout << root->data << (root->color == RED ? "(R)" : "(B)")
+             << " [Parent: " << (root->parent && root->parent != NIL ? to_string(root->parent->data) : "None") << "]" << endl;
 
-        printTreeHelper(node->left, space);
+        printHelper(root->left, space);
     }
 
 public:
-    BST() {
-        root = nullptr;
+    //Constructor that initialize NIL adn the root
+    RBTree() {
+        NIL = new RBNode(0);
+        NIL->color = BLACK;
+        NIL->left = NIL->right = NIL;
+        NIL->parent = nullptr;
+        root = NIL;
     }
 
-    //Adds numbers
+    //public insert function
     void insert(int val) {
-        root = insertHelper(root, val);
+        RBNode* z = new RBNode(val);
+        RBNode * y = NIL;
+        RBNode* x = root;
+
+        //standard BST insert
+        while (x != NIL) {
+            y = x;
+            if (z->data < x->data) x = x->left;
+            else x = x->right;
+        }
+
+        z->parent = y;
+        if (y == NIL) root = z;
+        else if (z->data < y->data) y->left = z;
+        else y->right = z;
+
+        z->left = NIL;
+        z->right = NIL;
+        z->color = RED;
+
+        fixInsert(z); //Maintain RB properties
     }
 
-    //public function to remove a number
-    void remove(int val) {
-        root = removeHelper(root, val);
+    //insert values from a file
+    void insertFromFile(const string& filename) {
+        ifstream file(filename);
+        int num;
+        if (!file) {
+            cout << "Error: File could not be opened!" << endl;
+            return;
+        }
+        while (file >> num) {
+            if (num < 1 || num > 999) {
+                cout << "Invalid number " << num << ", must be between 1 and 999." << endl;
+                continue;
+            }
+            insert(num);
+        }
+        file.close();
     }
 
-    //Public function to search for a num
-    bool search(int val) {
-        return searchHelper(root, val);
-    }
-
-    // print tree
-    void printTree() {
-        printTreeHelper(root, 0);
+    //print tree in rotated format
+    void printTree() const {
+        printHelper(root, 0);
     }
 };
 
-
 int main() {
-    BST tree;
+    RBTree tree;
     int choice, num;
     string filename;
 
     while (true) {
-        cout << "\n1. Add numbers from console\n2. Add numbers from file\n3. Remove a number\n4. Search for a number\n5. Print the tree\n6. Exit\n";
-        cout << "Enter your choice of number: ";
+        cout << "\n1. Add numbers from console\n2. Add numbers from file\n3. Print the tree\n4. Exit\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
-                cout << "Enter numbers between 1 and 999 (enter -1 to stop, also push enter in between numbers): ";
+                cout << "Enter numbers between 1 and 999 (-1 to stop): ";
                 while (true) {
                     cin >> num;
                     if (num == -1) break;
                     if (num < 1 || num > 999) {
-                        cout << "Invalid and wrong number. Please enter a number between 1 and 999.\n";
+                        cout << "Invalid number, try again." << endl;
                         continue;
                     }
                     tree.insert(num);
                 }
                 break;
-
-            case 2: {
-                cout << "Enter the filename: ";
+            case 2:
+                cout << "Enter filename: ";
                 cin >> filename;
-                ifstream file(filename);
-                if (!file) {
-                    cout << "File not found! oh no! This is not good! \n";
-                    break;
-                }
-                while (file >> num) {
-                    if (num < 1 || num > 999) {
-                        cout << "The number in the file is INVALID! Oh No!" << num << "." << endl;
-                        continue;
-                    }
-                    tree.insert(num);
-                }
-                file.close();
+                tree.insertFromFile(filename);
                 break;
-            }
-
             case 3:
-                cout << "Enter the number you would like to remove: ";
-                cin >> num;
-                tree.remove(num);
-                break;
-
-            case 4:
-                cout << "Enter the number to search: ";
-                cin >> num;
-                if (tree.search(num)) {
-                    cout << num << " is in the tree :)" << endl;
-                } else {
-                    cout << num << " is not in the tree :(" << endl;
-                }
-                break;
-
-            case 5:
-                cout << "Tree structure:\n";
                 tree.printTree();
                 break;
-
-            case 6:
-                cout << "Goodby. I hope you liked looking at binary tree. we should plant more trees tbh\n";
+            case 4:
                 return 0;
-
             default:
-                cout << "Invalid choice. Please try again.\n";
+                cout << "Invalid choice." << endl;
         }
     }
 }
