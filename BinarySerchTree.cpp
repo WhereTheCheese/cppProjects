@@ -5,7 +5,7 @@ using namespace std;
 
 enum Color { RED, BLACK };
 
-// you see its RB insted of BST becase it is red black tree
+//you see its RB insted of BST becase it is red black tree
 class RBNode {
 public:
     int data;
@@ -18,17 +18,21 @@ public:
 class RBTree {
 private:
     RBNode* root;
-    RBNode* NIL; 
+    RBNode* NIL;
 
     //x around righth child
     void leftRotate(RBNode* x) {
         RBNode* y = x->right;
         x->right = y->left;
-        if (y->left != NIL) y->left->parent = x;
+        if (y->left != NIL)
+            y->left->parent = x;
         y->parent = x->parent;
-        if (x->parent == nullptr) root = y;
-        else if (x == x->parent->left) x->parent->left = y;
-        else x->parent->right = y;
+        if (x->parent == nullptr)
+            root = y;
+        else if (x == x->parent->left)
+            x->parent->left = y;
+        else
+            x->parent->right = y;
         y->left = x;
         x->parent = y;
     }
@@ -37,11 +41,15 @@ private:
     void rightRotate(RBNode* y) {
         RBNode* x = y->left;
         y->left = x->right;
-        if (x->right != NIL) x->right->parent = y;
+        if (x->right != NIL)
+            x->right->parent = y;
         x->parent = y->parent;
-        if (y->parent == nullptr) root = x;
-        else if (y == y->parent->right) y->parent->right = x;
-        else y->parent->left = x;
+        if (y->parent == nullptr)
+            root = x;
+        else if (y == y->parent->right)
+            y->parent->right = x;
+        else
+            y->parent->left = x;
         x->right = y;
         y->parent = x;
     }
@@ -50,9 +58,9 @@ private:
     void fixInsert(RBNode* z) {
         while (z->parent != nullptr && z->parent->color == RED) {
             if (z->parent == z->parent->parent->left) {
-                RBNode* y = z->parent->parent->right; // Uncle (or aunt)
+                RBNode* y = z->parent->parent->right; //Unlce (or anunt)
                 if (y->color == RED) {
-                    //Case 1 uncle (or aunt, idc) is red
+                //Case 1 uncle (or aunt, idc) is red
                     z->parent->color = BLACK;
                     y->color = BLACK;
                     z->parent->parent->color = RED;
@@ -71,7 +79,7 @@ private:
             } else {
                 RBNode* y = z->parent->parent->left; //Uncle (or, again, aunt) on other side
                 if (y->color == RED) {
-                    //Case 1 uncle (or, again, aunt) is red
+                 //Case 1 uncle (or, again, aunt) is red
                     z->parent->color = BLACK;
                     y->color = BLACK;
                     z->parent->parent->color = RED;
@@ -91,7 +99,6 @@ private:
         }
         root->color = BLACK;
     }
-
     //recursive helper to print the tree
     void printHelper(RBNode* root, int space) const {
         if (root == NIL) return;
@@ -116,30 +123,34 @@ public:
         NIL->parent = nullptr;
         root = NIL;
     }
-
     //public insert function
     void insert(int val) {
         RBNode* z = new RBNode(val);
-        RBNode * y = NIL;
+        RBNode* y = nullptr;
         RBNode* x = root;
 
         //standard BST insert
         while (x != NIL) {
             y = x;
-            if (z->data < x->data) x = x->left;
-            else x = x->right;
+            if (z->data < x->data)
+                x = x->left;
+            else
+                x = x->right;
         }
 
         z->parent = y;
-        if (y == NIL) root = z;
-        else if (z->data < y->data) y->left = z;
-        else y->right = z;
+        if (y == nullptr)
+            root = z;
+        else if (z->data < y->data)
+            y->left = z;
+        else
+            y->right = z;
 
         z->left = NIL;
         z->right = NIL;
         z->color = RED;
 
-        fixInsert(z); //Maintain RB properties
+        fixInsert(z);  //Maintain RB properties
     }
 
     //insert values from a file
@@ -159,7 +170,6 @@ public:
         }
         file.close();
     }
-
     //print tree in rotated format
     void printTree() const {
         printHelper(root, 0);
