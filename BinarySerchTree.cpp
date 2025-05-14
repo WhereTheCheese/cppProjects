@@ -37,7 +37,7 @@ private:
         x->parent = y;
     }
 
-    //y around other child
+  //y around other child
     void rightRotate(RBNode* y) {
         RBNode* x = y->left;
         y->left = x->right;
@@ -54,20 +54,20 @@ private:
         y->parent = x;
     }
 
-    //fix if its red or black aftet he insertion happens
+   //fix if its red or black aftet he insertion happens
     void fixInsert(RBNode* z) {
         while (z->parent != nullptr && z->parent->color == RED) {
             if (z->parent == z->parent->parent->left) {
                 RBNode* y = z->parent->parent->right; //Unlce (or anunt)
                 if (y->color == RED) {
-                //Case 1 uncle (or aunt, idc) is red
+                     //Case 1 uncle (or aunt, idc) is red
                     z->parent->color = BLACK;
                     y->color = BLACK;
                     z->parent->parent->color = RED;
                     z = z->parent->parent;
                 } else {
                     if (z == z->parent->right) {
-                        //Case 2 triangle
+                      //Case 2 triangle
                         z = z->parent;
                         leftRotate(z);
                     }
@@ -79,14 +79,14 @@ private:
             } else {
                 RBNode* y = z->parent->parent->left; //Uncle (or, again, aunt) on other side
                 if (y->color == RED) {
-                 //Case 1 uncle (or, again, aunt) is red
+                   //Case 1 uncle (or, again, aunt) is red
                     z->parent->color = BLACK;
                     y->color = BLACK;
                     z->parent->parent->color = RED;
                     z = z->parent->parent;
                 } else {
                     if (z == z->parent->left) {
-                        //Case 2 triangle
+                       //Case 2 triangle
                         z = z->parent;
                         rightRotate(z);
                     }
@@ -99,18 +99,123 @@ private:
         }
         root->color = BLACK;
     }
+  //recursive helper to print the tree
+    void transplant(RBNode* u, RBNode* v) {
+        if (u->parent == nullptr) root = v;
+        else if (u == u->parent->left) u->parent->left = v;
+        else u->parent->right = v;
+        v->parent = u->parent;
+    }
+
+    RBNode* treeMinimum(RBNode* x) {
+        while (x->left != NIL)
+            x = x->left;
+        return x;
+    }
+
+    void fixDelete(RBNode* x) {
+        while (x != root && x->color == BLACK) {
+            if (x == x->parent->left) {
+                RBNode* w = x->parent->right;
+                if (w->color == RED) {
+                    w->color = BLACK;
+                    x->parent->color = RED;
+                    leftRotate(x->parent);
+                    w = x->parent->right;
+                }
+                if (w->left->color == BLACK && w->right->color == BLACK) {
+                    w->color = RED;
+                    x = x->parent;
+                } else {
+                    if (w->right->color == BLACK) {
+                        w->left->color = BLACK;
+                        w->color = RED;
+                        rightRotate(w);
+                        w = x->parent->right;
+                    }
+                    w->color = x->parent->color;
+                    x->parent->color = BLACK;
+                    w->right->color = BLACK;
+                    leftRotate(x->parent);
+                    x = root;
+                }
+            } else {
+                RBNode* w = x->parent->left;
+                if (w->color == RED) {
+                    w->color = BLACK;
+                    x->parent->color = RED;
+                    rightRotate(x->parent);
+                    w = x->parent->left;
+                }
+                if (w->right->color == BLACK && w->left->color == BLACK) {
+                    w->color = RED;
+                    x = x->parent;
+                } else {
+                    if (w->left->color == BLACK) {
+                        w->right->color = BLACK;
+                        w->color = RED;
+                        leftRotate(w);
+                        w = x->parent->left;
+                    }
+                    w->color = x->parent->color;
+                    x->parent->color = BLACK;
+                    w->left->color = BLACK;
+                    rightRotate(x->parent);
+                    x = root;
+                }
+            }
+        }
+        x->color = BLACK;
+    }
+
+    void deleteNode(RBNode* z) {
+        RBNode* y = z;
+        RBNode* x;
+        Color y_original_color = y->color;
+
+        if (z->left == NIL) {
+            x = z->right;
+            transplant(z, z->right);
+        } else if (z->right == NIL) {
+            x = z->left;
+            transplant(z, z->left);
+        } else {
+            y = treeMinimum(z->right);
+            y_original_color = y->color;
+            x = y->right;
+            if (y->parent == z) {
+                x->parent = y;
+            } else {
+                transplant(y, y->right);
+                y->right = z->right;
+                y->right->parent = y;
+            }
+            transplant(z, y);
+            y->left = z->left;
+            y->left->parent = y;
+            y->color = z->color;
+        }
+        delete z;
+        if (y_original_color == BLACK)
+            fixDelete(x);
+    }
+    //searches the tree for a node
+    RBNode* searchTree(RBNode* node, int key) const {
+        if (node == NIL || key == node->data)
+            return node;
+        if (key < node->data)
+            return searchTree(node->left, key);
+        return searchTree(node->right, key);
+    }
     //recursive helper to print the tree
     void printHelper(RBNode* root, int space) const {
         if (root == NIL) return;
-
         space += 10;
         printHelper(root->right, space);
-
         cout << endl;
         for (int i = 10; i < space; i++) cout << " ";
         cout << root->data << (root->color == RED ? "(R)" : "(B)")
              << " [Parent: " << (root->parent && root->parent != NIL ? to_string(root->parent->data) : "None") << "]" << endl;
-
         printHelper(root->left, space);
     }
 
@@ -129,7 +234,7 @@ public:
         RBNode* y = nullptr;
         RBNode* x = root;
 
-        //standard BST insert
+      //standard BST insert
         while (x != NIL) {
             y = x;
             if (z->data < x->data)
@@ -153,7 +258,21 @@ public:
         fixInsert(z);  //Maintain RB properties
     }
 
-    //insert values from a file
+  //remover function
+    void remove(int val) {
+        RBNode* z = searchTree(root, val);
+        if (z == NIL) {
+            cout << "Value " << val << " not found in the tree." << endl;
+            return;
+        }
+        deleteNode(z);
+    }
+  //serch
+    bool search(int val) const {
+        return searchTree(root, val) != NIL;
+    }
+
+     //insert values from a file
     void insertFromFile(const string& filename) {
         ifstream file(filename);
         int num;
@@ -170,6 +289,7 @@ public:
         }
         file.close();
     }
+
     //print tree in rotated format
     void printTree() const {
         printHelper(root, 0);
@@ -182,7 +302,7 @@ int main() {
     string filename;
 
     while (true) {
-        cout << "\n1. Add numbers from console\n2. Add numbers from file\n3. Print the tree\n4. Exit\n";
+        cout << "\n1. Add numbers from console\n2. Add numbers from file\n3. Print the tree\n4. Search for a number\n5. Remove a number\n6. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -208,6 +328,16 @@ int main() {
                 tree.printTree();
                 break;
             case 4:
+                cout << "Enter number to search: ";
+                cin >> num;
+                cout << (tree.search(num) ? "Found" : "Not found") << endl;
+                break;
+            case 5:
+                cout << "Enter number to remove: ";
+                cin >> num;
+                tree.remove(num);
+                break;
+            case 6:
                 return 0;
             default:
                 cout << "Invalid choice." << endl;
