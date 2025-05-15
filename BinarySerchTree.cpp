@@ -112,7 +112,7 @@ private:
             x = x->left;
         return x;
     }
-
+//helper to do the delteion (I doint think this is the helper, this is what acctully does it)
     void fixDelete(RBNode* x) {
         while (x != root && x->color == BLACK) {
             if (x == x->parent->left) {
@@ -167,7 +167,7 @@ private:
         }
         x->color = BLACK;
     }
-
+//node deleation 
     void deleteNode(RBNode* z) {
         RBNode* y = z;
         RBNode* x;
