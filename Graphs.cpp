@@ -1,6 +1,11 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
+#include <queue>
+#include <vector>
+#include <climits>
+#include <set>
+
 using namespace std;
 
 class Graph {
@@ -54,4 +59,61 @@ public:
         }
     }
 };
+
+
+class GraphWithDijkstra : public Graph {
+public:
+    void dijkstra(const string& start, const string& end) {
+        if (!adjTable.count(start) || !adjTable.count(end)) {
+            cout << "One or both vertices do not exist.\n";
+            return;
+        }
+
+        unordered_map<string, int> distance;
+        unordered_map<string, string> previous;
+        for (auto& pair : adjTable) {
+            distance[pair.first] = INT_MAX;
+        }
+        distance[start] = 0;
+
+        set<pair<int, string>> pq;
+        pq.insert({0, start});
+
+        while (!pq.empty()) {
+            auto [dist, current] = *pq.begin();
+            pq.erase(pq.begin());
+
+            if (current == end) break;
+
+            for (auto& [neighbor, weight] : adjTable[current]) {
+                int newDist = dist + weight;
+                if (newDist < distance[neighbor]) {
+                    pq.erase({distance[neighbor], neighbor});
+                    distance[neighbor] = newDist;
+                    previous[neighbor] = current;
+                    pq.insert({newDist, neighbor});
+                }
+            }
+        }
+
+        if (distance[end] == INT_MAX) {
+            cout << "No path exists.\n";
+            return;
+        }
+
+        vector<string> path;
+        for (string at = end; !at.empty(); at = previous[at]) {
+            path.push_back(at);
+        }
+        reverse(path.begin(), path.end());
+
+        cout << "Shortest path: ";
+        for (size_t i = 0; i < path.size(); ++i) {
+            cout << path[i];
+            if (i != path.size() - 1) cout << " -> ";
+        }
+        cout << " (Total weight: " << distance[end] << ")\n";
+    }
+};
+
 
